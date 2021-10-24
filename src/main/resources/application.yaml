@@ -1,0 +1,19 @@
+server:
+  port: 8585
+  servlet:
+    context-path: "/v1"
+spring:
+  application:
+    name: tdd_test2_jwt
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db_test_users
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
