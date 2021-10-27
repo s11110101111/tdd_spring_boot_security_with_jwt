@@ -2,6 +2,8 @@ server:
   port: 8585
   servlet:
     context-path: "/v1"
+  error:
+    include-stacktrace: never
 spring:
   application:
     name: tdd_test2_jwt
@@ -17,3 +19,10 @@ spring:
     show-sql: false
     properties:
       hibernate.format_sql: true
+  main:
+    banner-mode: off
+logging:
+  level:
+    org:
+      springframework: INFO
+    root: ERROR

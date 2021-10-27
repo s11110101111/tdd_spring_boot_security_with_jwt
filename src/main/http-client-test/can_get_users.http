@@ -1,0 +1,37 @@
+###
+GET http://{{host}}:{{port}}/v1/api/users
+Accept: application/json
+
+###
+GET http://{{host}}:{{port}}/v1/login
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+
+> {%
+client.log("Попытка аутентификации пользователя");
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+###
+GET http://{{host}}:{{port}}/v1/api/users
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+
+> {%
+client.log(response.headers);
+client.log()
+client.log("Попытка аутентификации пользователя");
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+
+client.test("Response content-type is json", function() {
+  var type = response.contentType.mimeType;
+  client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+});
+
+ %}
+
+###
