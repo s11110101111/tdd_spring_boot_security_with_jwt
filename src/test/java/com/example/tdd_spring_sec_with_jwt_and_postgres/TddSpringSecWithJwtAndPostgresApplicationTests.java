@@ -37,7 +37,7 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     @DisplayName("Прохождение аутентификации")
     void canGetListUsersIntegrationTest() {
         ResponseEntity<String> responseEntity = testRestTemplate
-            .withBasicAuth("admin", "password")
+            .withBasicAuth("user", "password")
             .getForEntity("/api/users", String.class);
         printJSON(responseEntity);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
