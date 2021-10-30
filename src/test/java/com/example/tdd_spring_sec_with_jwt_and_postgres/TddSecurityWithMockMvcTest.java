@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.tdd_spring_sec_with_jwt_and_postgres.domain.User;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.servicies.UserDetailsImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DisplayName("Мокаем получение списка пользователей")
 public class TddSecurityWithMockMvcTest {
-
+ObjectMapper om = new ObjectMapper();
     @Autowired
     private WebApplicationContext context;
     private MockMvc mockMvc;
@@ -55,13 +56,13 @@ public class TddSecurityWithMockMvcTest {
     }
 
     @Test
-    @DisplayName("о получении списка пользователей")
+    @DisplayName("о получении списка пользователей пользователем")
     public void aboutReturnsUsers() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/about")
                 .with(user("user")))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().string("Jim is here!"));
+            .andExpect(content().string("API users"));
     }
 
     @Test
@@ -76,17 +77,18 @@ public class TddSecurityWithMockMvcTest {
         User jim = new User();
         jim.setName("Jim Carry");
         jim.setUsername("jim");
-        jim.setEmail("jim@gmail.com");
+        jim.setEmail("carry@gmail.com");
         jim.setEnabled(true);
         jim.setAdmin(true);
-        jim.setDescription("good");
-
-
+        jim.setDescription("description good");
+ String jimJson = om.writeValueAsString(jim);
+        System.out.println(jimJson);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users").with(
             user(new UserDetailsImpl.UserServiceDetails(jim))))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(1)));
-           // .andExpect(MockMvcResultMatchers.jsonPath("$[0]", is("Jim is here!")));
+            .andDo(print())
+            .andExpect(MockMvcResultMatchers.jsonPath("$",hasSize(2)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value("jim"));
     }
 
 }
