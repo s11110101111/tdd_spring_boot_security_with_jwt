@@ -4,6 +4,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.tdd_spring_sec_with_jwt_and_postgres.domain.UserDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,12 +61,12 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     @DisplayName("can get end point /users user Authorized")
     @WithMockUser(username = "admin", password = "123", roles = {"USER", "ADMIN"})
     void canGetUsersListAuthenticatedUserAdminTest() throws Exception {
-        User user = new User("Jim Carry","jim","123");
+        UserDomain userDomain = new UserDomain("Jim Carry","jim","123");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(print())
             .andExpect(status().isOk())
             //    .andExpect(content().string("Users List, for admin"));
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].getUsername").value(user.getUsername()));
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].getUsername").value(userDomain.getUsername()));
     }
 
     @Test
