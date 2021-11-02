@@ -66,7 +66,7 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
             .andDo(print())
             .andExpect(status().isOk())
             //    .andExpect(content().string("Users List, for admin"));
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].getUsername").value(userDomain.getUsername()));
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(userDomain.getUsername()));
     }
 
     @Test
