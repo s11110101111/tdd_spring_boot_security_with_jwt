@@ -17,6 +17,8 @@ class UserDomainTest {
     @BeforeEach
     void setUp() {
         expectedUser = new UserDomain ("Jim Carry","jim","123");
+        expectedUser.setEmail("carry@gmail.com");
+        expectedUser.setDescription("user admin");
     }
 @Test
 @DisplayName("can get username for domainUser")
@@ -26,5 +28,11 @@ class UserDomainTest {
         user.setUsername("jim");
         user.setPassword("123");
         assertThat(user.getPassword()).isEqualTo(expectedUser.getPassword());
+    }
+
+    @Test @DisplayName("create user all construct")
+    void createUser(){
+        UserDomain user = new UserDomain("Jim Carry","jim","123","carry@gmail.com","user admin");
+        assertThat(user).isEqualTo(expectedUser);
     }
 }
