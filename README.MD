@@ -10,7 +10,9 @@
 1. Создать Spring Security project
 2. SpringBootTest
     настроить MocMvc c WebApplicationContext и применить SpringSecurity
-3. 
+3. написать два теста на доступ к одному ресурсу без пароля к другому по паролю с наличием права админа
+4. получить все зеленые тесты, описать фильтр для безопасности http и REST контроллер с двумя путями к ресурсам 
+5. добавить в тест http-client
 
 ### Настройки для hibernate.
 брал от сюда [Building fast scalable persistent layer with Spring](https://youtu.be/smyFi4OCHDE?t=310)
