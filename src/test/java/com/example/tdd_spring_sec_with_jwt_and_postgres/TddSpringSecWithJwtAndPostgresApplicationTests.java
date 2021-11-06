@@ -3,6 +3,7 @@ package com.example.tdd_spring_sec_with_jwt_and_postgres;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
+import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,15 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     @Autowired
     private WebApplicationContext context;
     private MockMvc mockMvc;
-
+    private UserDomain expectedUser;
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .apply(SecurityMockMvcConfigurers.springSecurity())
             .build();
+        expectedUser = new UserDomain("Jim Carry","jim");
+
     }
 
     @Test
@@ -52,8 +55,8 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     void canLoadContextUsers() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0]")
-                .value("jim"));
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].username")
+                .value(expectedUser.getUsername()));
     }
 
     @Test
