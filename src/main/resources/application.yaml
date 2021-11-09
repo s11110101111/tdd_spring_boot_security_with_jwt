@@ -17,3 +17,7 @@ spring:
     show-sql: false
     properties:
       hibernate.format_sql: true
+# подробный лог безопасности для обучения
+logging.level:
+  root: INFO
+  org.springframework.security: TRACE
