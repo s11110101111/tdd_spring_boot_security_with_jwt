@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -39,6 +40,20 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content().string("About users!"));
 
+    }
+
+    @Test
+    void cantGetUsersWithoutAuthentication() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+    @Test
+    @WithMockUser(username = "jim")
+    void cantGetUsersWithoutAuthorizationIfNotAdmin() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 }
