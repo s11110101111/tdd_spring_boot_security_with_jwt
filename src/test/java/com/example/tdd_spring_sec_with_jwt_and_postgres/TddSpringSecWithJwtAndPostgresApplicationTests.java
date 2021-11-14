@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,12 +26,14 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     void setUp() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
+            .apply(SecurityMockMvcConfigurers.springSecurity())
+
             .build();
 
     }
 
     @Test
-    void canGetAbout() throws Exception {
+    void canGetAboutWithoutAuthentication() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
