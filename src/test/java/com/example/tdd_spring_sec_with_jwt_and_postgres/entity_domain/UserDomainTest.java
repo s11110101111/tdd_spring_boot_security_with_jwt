@@ -24,4 +24,11 @@ private UserDomain expectedUser;
         user.getRoles().add("ADMIN");
         assertThat(user).isEqualTo(expectedUser);
     }
+
+    @Test
+    void constructorCopy() {
+        UserDomain user = new UserDomain(expectedUser);
+
+        assertThat(expectedUser).usingRecursiveComparison().isEqualTo(user);
+    }
 }
