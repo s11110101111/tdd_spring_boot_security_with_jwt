@@ -1,6 +1,10 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres;
 
+import static java.util.Arrays.asList;
+
+import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,14 +26,15 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     @Autowired
     private WebApplicationContext context;
     private MockMvc mockMvc;
+    private UserDomain expectedUser;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .apply(SecurityMockMvcConfigurers.springSecurity())
-
             .build();
+        expectedUser= new UserDomain("Jim Carry","jim",asList("USER","ADMIN"));
 
     }
 
@@ -43,17 +48,30 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     }
 
     @Test
-    void cantGetUsersWithoutAuthentication() throws Exception{
+    void cantGetUsersWithoutAuthentication() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
+
     @Test
     @WithMockUser(username = "jim")
-    void cantGetUsersWithoutAuthorizationIfNotAdmin() throws Exception{
+    void cantGetUsersWithoutAuthorizationIfNotAdmin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Can get users is has role admin")
+    @WithMockUser(username = "jim",roles = {"USER","ADMIN"})
+    void canGetUsersIfHasRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
+
     }
 
 }
