@@ -27,4 +27,11 @@ public class UserDomain {
         this.username = username;
         this.roles = roles;
     }
+
+    public UserDomain(UserDomain user) {
+        this.name= user.getName();
+        this.username= user.getUsername();
+        this.roles = user.getRoles();
+
+    }
 }

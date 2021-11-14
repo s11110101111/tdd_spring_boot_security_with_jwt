@@ -2,8 +2,10 @@ package com.example.tdd_spring_sec_with_jwt_and_postgres;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
+import com.example.tdd_spring_sec_with_jwt_and_postgres.services.UserDomainService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
