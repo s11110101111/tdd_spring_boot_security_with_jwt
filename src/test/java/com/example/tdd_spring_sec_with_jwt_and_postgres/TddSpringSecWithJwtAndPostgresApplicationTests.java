@@ -89,5 +89,12 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
                 MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
 
     }
+    @Test
+    @DisplayName("can get error")
+    void canGetError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/error"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
 }

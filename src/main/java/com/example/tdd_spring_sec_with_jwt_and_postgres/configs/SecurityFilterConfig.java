@@ -18,8 +18,10 @@ public class SecurityFilterConfig {
             .httpBasic(Customizer.withDefaults())
             .authorizeRequests(authz ->
                 authz
+                    .antMatchers("/error").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/about").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/users").hasRole("ADMIN")
+                    .anyRequest().authenticated()
                     );
 
             return http.build();
