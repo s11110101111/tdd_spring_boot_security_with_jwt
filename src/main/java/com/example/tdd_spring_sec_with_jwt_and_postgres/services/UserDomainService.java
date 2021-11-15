@@ -31,7 +31,7 @@ public class UserDomainService {
 
         @Override
         public String getPassword() {
-            return null;
+            return super.getPassword();
         }
 
 

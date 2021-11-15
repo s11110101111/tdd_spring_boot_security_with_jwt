@@ -14,6 +14,7 @@ public class UserDomain {
 
     private final String name;
     private final   String username;
+    private String password;
     private final java.util.List<String> roles;
 
     public UserDomain(String name, String username) {
@@ -31,7 +32,12 @@ public class UserDomain {
     public UserDomain(UserDomain user) {
         this.name= user.getName();
         this.username= user.getUsername();
+        this.password = user.getPassword();
         this.roles = user.getRoles();
 
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

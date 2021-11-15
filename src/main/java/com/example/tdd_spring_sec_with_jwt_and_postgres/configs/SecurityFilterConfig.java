@@ -1,6 +1,7 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres.configs;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,8 +18,8 @@ public class SecurityFilterConfig {
             .httpBasic(Customizer.withDefaults())
             .authorizeRequests(authz ->
                 authz
-                    .antMatchers("/api/about").permitAll()
-                    .antMatchers("/api/users").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/api/about").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/users").hasRole("ADMIN")
                     );
 
             return http.build();
