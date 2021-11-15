@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserDomainService {
 
-    final static class UserDomainDetails extends UserDomain implements UserDetails {
+    public final static class UserDomainDetails extends UserDomain implements UserDetails {
 
         public UserDomainDetails(UserDomain user) {
             super(user);
