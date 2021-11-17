@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Service user domain
+ * provides data for authorized users
  */
 
 public class UserDomainService {
