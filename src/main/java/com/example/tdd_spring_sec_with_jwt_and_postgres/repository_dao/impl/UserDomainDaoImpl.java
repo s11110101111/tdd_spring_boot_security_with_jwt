@@ -22,6 +22,6 @@ public class UserDomainDaoImpl implements UserDomainDao {
 
     @Override
     public List<UserDomain> getAllUsers() {
-        return null;
+        return userDomains;
     }
 }

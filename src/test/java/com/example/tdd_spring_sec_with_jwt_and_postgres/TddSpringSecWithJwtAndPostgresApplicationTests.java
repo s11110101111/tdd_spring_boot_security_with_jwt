@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
+import com.example.tdd_spring_sec_with_jwt_and_postgres.dto.UserDomainDto;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.services.UserDomainDaoService;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.services.UserDomainService;
@@ -87,10 +88,24 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
     @Test
     @DisplayName("Can get users is has role admin")
     void canGetUsersIfUserJimHasRoleAdmin() throws Exception {
-        List<UserDomain> response = asList(new UserDomain("John Smith", "john", Collections.singletonList("USER")),
-            new UserDomain("John Smith", "john", Collections.singletonList("USER"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+                .with(user(new UserDomainService.UserDomainDetails(expectedUser))))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
+
+    }
+
+    @Test
+    @DisplayName("Can get users with userDomainDaoService")
+    void canGetUsersWithUserDomainDaoService() throws Exception {
+        List<UserDomainDto> response = asList(
+            new UserDomainDto("John Smith", "john", Collections.singletonList("USER")),
+            new UserDomainDto("John Smith", "john", Collections.singletonList("USER"))
         );
-        BDDMockito.given(UserDomainDaoServiceImpl.getAllUsers()).willReturn(response);
+        BDDMockito.given(userDomainDaoService.getAllUsers()).willReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
                 .with(user(new UserDomainService.UserDomainDetails(expectedUser))))
             .andDo(MockMvcResultHandlers.print())
@@ -100,12 +115,6 @@ class TddSpringSecWithJwtAndPostgresApplicationTests {
                 MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
 
         BDDMockito.verify(userDomainDaoService).getAllUsers();
-
-    }
-
-    @Test
-    @DisplayName("Can get users with userDomainDaoService")
-    void canGetUsersWithUserDomainDaoService() {
 
     }
 

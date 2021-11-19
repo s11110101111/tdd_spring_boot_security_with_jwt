@@ -2,6 +2,7 @@ package com.example.tdd_spring_sec_with_jwt_and_postgres.repository_dao;
 
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +14,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- *
+ *проверка интерфейса получения данных
+ * data fetch interface check
  */
 
 public class RepositoryDaoTest {
@@ -35,6 +37,6 @@ public class RepositoryDaoTest {
     @Test
     void getDto(){
         UserDomainDao dao = new UserDomainDaoImpl();
-        System.out.println(dao.getAllUsers().toString());
+        assertThat(dao.getAllUsers().get(0).getUsername()).isEqualTo("jim");
     }
 }
