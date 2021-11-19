@@ -2,17 +2,17 @@ package com.example.tdd_spring_sec_with_jwt_and_postgres.repository_dao.impl;
 
 import static java.util.Arrays.asList;
 
-import com.example.tdd_spring_sec_with_jwt_and_postgres.dto.UserDomainDto;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.repository_dao.UserDomainDao;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  *
  */
-
+@Service
 public class UserDomainDaoImpl implements UserDomainDao {
     private List<UserDomain> userDomains = new ArrayList<>();
     {
@@ -21,9 +21,7 @@ public class UserDomainDaoImpl implements UserDomainDao {
     }
 
     @Override
-    public List<UserDomainDto> getAllUsers() {
-
-        return asList(new UserDomainDto(userDomains.get(0).getName(),userDomains.get(0).getUsername(),userDomains.get(0).getRoles()),
-            new UserDomainDto(userDomains.get(1).getName(),userDomains.get(1).getUsername(),userDomains.get(1).getRoles()));
+    public List<UserDomain> getAllUsers() {
+        return null;
     }
 }

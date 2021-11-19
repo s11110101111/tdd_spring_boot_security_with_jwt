@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.example.tdd_spring_sec_with_jwt_and_postgres.dto.UserDomainDto;
+import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.repository_dao.impl.UserDomainDaoImpl;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,13 +22,13 @@ public class RepositoryDaoTest {
 
     @Test
     public void getAllUsers() {
-        UserDomainDto userDto = new UserDomainDto("Jim Carry", "jim", asList("USER", "ADMIN"));
-        UserDomainDto userDto1 = new UserDomainDto("John Smith", "john",
+        UserDomain user = new UserDomain("Jim Carry", "jim", asList("USER", "ADMIN"));
+        UserDomain user1 = new UserDomain("John Smith", "john",
             Collections.singletonList("USER"));
-        List<UserDomainDto> dtos = new ArrayList<>();
-        dtos.add(userDto);
-        dtos.add(userDto1);
-        when(userDao.getAllUsers()).thenReturn(dtos);
+        List<UserDomain> users = new ArrayList<>();
+        users.add(user);
+        users.add(user1);
+        when(userDao.getAllUsers()).thenReturn(users);
 
         System.out.println(userDao.getAllUsers());
     }
