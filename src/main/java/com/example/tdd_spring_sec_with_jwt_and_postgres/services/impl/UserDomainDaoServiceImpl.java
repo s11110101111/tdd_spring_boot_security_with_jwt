@@ -23,10 +23,12 @@ public class UserDomainDaoServiceImpl implements UserDomainDaoService {
 
     @Override
     public List<UserDomainDto> getAllUsers() {
-        List<UserDomainDto> userDtos = userDomainDao.getAllUsers().stream()
+        List<UserDomainDto> userDtos;
+        userDtos = userDomainDao.getAllUsers().stream()
             .map(userDomain -> {
                return new UserDomainDto(userDomain.getName(),userDomain.getUsername(), userDomain.getRoles());
             }).collect(Collectors.toList());
-         return userDtos;
+
+        return userDtos;
     }
 }
