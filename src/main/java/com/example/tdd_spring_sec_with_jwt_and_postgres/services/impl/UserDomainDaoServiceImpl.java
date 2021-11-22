@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class UserDomainDaoServiceImpl implements UserDomainDaoService {
+class UserDomainDaoServiceImpl implements UserDomainDaoService {
 
     private final UserDomainDao userDomainDao;
 
