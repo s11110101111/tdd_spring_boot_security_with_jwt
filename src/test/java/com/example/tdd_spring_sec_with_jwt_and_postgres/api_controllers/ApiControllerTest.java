@@ -32,6 +32,7 @@ class ApiControllerTest {
 
     @BeforeEach
     void setUp(){
+
         this.apiController = new ApiController(userDomainDaoService);
     }
 
