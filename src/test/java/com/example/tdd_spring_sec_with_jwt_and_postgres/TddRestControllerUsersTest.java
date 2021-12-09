@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,7 @@ public class TddRestControllerUsersTest {
     void setUp() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
+            .apply(SecurityMockMvcConfigurers.springSecurity())
             .build();
     }
 
