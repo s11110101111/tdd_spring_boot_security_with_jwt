@@ -5,7 +5,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class TddSpringSecWithJwtAndPostgresApplicationTests {
-
+//чудесны пустой тест проверяет поднятие контекста приложения
+    // a wonderfully empty test checks application context run
     @Test
     void contextLoads() {
     }

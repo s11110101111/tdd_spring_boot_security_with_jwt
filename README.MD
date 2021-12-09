@@ -19,7 +19,7 @@
 
 ### Настройки для hibernate.
 брал от сюда [Building fast scalable persistent layer with Spring](https://youtu.be/smyFi4OCHDE?t=310)
-### Видео о безопасности и расказывают про сервер авторизиции jwt и как добавить потом роли
+### Видео о безопасности и рассказывают про сервер авторизации jwt и как добавить потом роли
 [Доклад на утубе](https://youtu.be/xEnvAAhMGu4)
 [Немного про север аутентификации](https://youtu.be/xEnvAAhMGu4)
 [JWT токен](https://youtu.be/VVn9OG9nfH0)
