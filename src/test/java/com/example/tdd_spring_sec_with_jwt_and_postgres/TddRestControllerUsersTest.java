@@ -37,7 +37,7 @@ public class TddRestControllerUsersTest {
     @DisplayName("Можем получить доступ к описанию контроллера пользователей"
         + "(We can access to about):")
     void canGetAbout() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/about"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
             .andExpectAll(MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.content().string("About users!"));
