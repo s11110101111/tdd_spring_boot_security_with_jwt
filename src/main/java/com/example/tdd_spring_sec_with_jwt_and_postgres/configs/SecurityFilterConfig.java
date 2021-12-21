@@ -19,6 +19,7 @@ public class SecurityFilterConfig {
             .authorizeRequests(authz ->
                 authz
                     .antMatchers("/api/about").permitAll()
+                    .antMatchers("/api/users").hasRole("ADMIN")
                     .anyRequest().authenticated());
         return http.build();
 
