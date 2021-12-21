@@ -48,21 +48,30 @@ public class TddRestControllerUsersTest {
                 MockMvcResultMatchers.content().string("About users!"));
 
     }
+    @Test
+    @DisplayName("Не авторизованный пользователь не имеет доступа к /users")
+    void unauthorizedUser_GetUsers_ReturnUnauthorized() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+    @Test
+    @DisplayName("Авторизованному пользователю без роли ADMIN не имеет доступ запрещен")
+    @WithMockUser(roles = {"USER","SUPER_USER"})
+    void authorizedUserWithoutRoleAdmin_GetUsers_ReturnForbidden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isForbidden());
+
+    }
 
     @Test
-    @DisplayName("Авторизованный пользователь имеет доступ к /users")
-    @WithMockUser
-    void authorizedUser_GetUsers_ReturnsOk() throws Exception {
+    @DisplayName("Авторизованный пользователь с ролью ADMIN имеет доступ к /users")
+    @WithMockUser(roles = {"USER","ADMIN"})
+    void authorizedUserWithRoleAdmin_GetUsers_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test
-    @DisplayName("Не авторизованный пользователь не имеет доступа к /users")
-    void unauthorizedUser_GetUsers_ReturnForbidden() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
 }
