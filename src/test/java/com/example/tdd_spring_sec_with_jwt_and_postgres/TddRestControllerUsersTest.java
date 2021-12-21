@@ -38,7 +38,9 @@ public class TddRestControllerUsersTest {
     @Test
     @DisplayName("Можем получить доступ к описанию контроллера пользователей"
         + "(We can access to about):")
-    void canGetAbout() throws Exception {
+    // не авторизованный пользователь может сделать запрос к about и получить ОК.
+    // ExpectedBehavior ожидаемое поведение
+    void unauthorizedUser_GetAbout_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
             .andExpectAll(MockMvcResultMatchers.status().isOk(),
