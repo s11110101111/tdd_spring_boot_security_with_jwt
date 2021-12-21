@@ -58,4 +58,11 @@ public class TddRestControllerUsersTest {
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @DisplayName("Не авторизованный пользователь не имеет доступа к /users")
+    void unauthorizedUser_GetUsers_ReturnForbidden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
 }
