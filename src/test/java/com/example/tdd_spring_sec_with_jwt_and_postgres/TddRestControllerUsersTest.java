@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -46,6 +47,15 @@ public class TddRestControllerUsersTest {
             .andExpectAll(MockMvcResultMatchers.status().isOk(),
                 MockMvcResultMatchers.content().string("About users!"));
 
+    }
+
+    @Test
+    @DisplayName("Авторизованный пользователь имеет доступ к /users")
+    @WithMockUser
+    void authorizedUser_GetUsers_ReturnsOk() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 }
