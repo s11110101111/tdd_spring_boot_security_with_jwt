@@ -16,4 +16,9 @@ public class ApiUsersController {
         return "About users!";
     }
 
+    @GetMapping("/users")
+    public String getUsers(){
+        return "Jim, John";
+    }
+
 }
