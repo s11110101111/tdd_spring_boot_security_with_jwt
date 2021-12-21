@@ -1,5 +1,7 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres.controllers;
 
+import static java.util.Arrays.asList;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +19,8 @@ public class ApiUsersController {
     }
 
     @GetMapping("/users")
-    public String getUsers(){
-        return "Jim, John";
+    public Iterable<String> getUsers(){
+        return asList("Jim","John");
     }
 
 }
