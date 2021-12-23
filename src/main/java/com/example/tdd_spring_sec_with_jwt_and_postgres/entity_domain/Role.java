@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *Роли Пользователя
+ * Роли Пользователя
  */
 @Getter
 @Setter
@@ -15,5 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Role {
-    private String role ="";
+
+    private String role = "";
 }

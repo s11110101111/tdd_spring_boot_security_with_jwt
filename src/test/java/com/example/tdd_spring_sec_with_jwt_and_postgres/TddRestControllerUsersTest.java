@@ -46,10 +46,9 @@ public class TddRestControllerUsersTest {
     private UserDomain getExpectedUserForTest() {
         UserDomain user = new UserDomain();
         user.setFirstName("Jim");
-        user.setLastName ("Carry");
+        user.setLastName("Carry");
         user.setUsername("jim");
-        user.setRoles(asList(new Role("USER"),new Role("ADMIN")));
-
+        user.setRoles(asList(new Role("USER"), new Role("ADMIN")));
 
         return user;
     }
@@ -57,8 +56,8 @@ public class TddRestControllerUsersTest {
     @Test
     @DisplayName("Можем получить доступ к описанию контроллера пользователей"
         + "(We can access to about):")
-    // не авторизованный пользователь может сделать запрос к about и получить ОК.
-    // ExpectedBehavior ожидаемое поведение
+        // не авторизованный пользователь может сделать запрос к about и получить ОК.
+        // ExpectedBehavior ожидаемое поведение
     void unauthorizedUser_GetAbout_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
@@ -66,6 +65,7 @@ public class TddRestControllerUsersTest {
                 MockMvcResultMatchers.content().string("About users!"));
 
     }
+
     @Test
     @DisplayName("Не авторизованный пользователь не имеет доступа к /users")
     void unauthorizedUser_GetUsers_ReturnUnauthorized() throws Exception {
@@ -73,9 +73,10 @@ public class TddRestControllerUsersTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
+
     @Test
     @DisplayName("Авторизованному пользователю без роли ADMIN не имеет доступ запрещен")
-    @WithMockUser(roles = {"USER","SUPER_USER"})
+    @WithMockUser(roles = {"USER", "SUPER_USER"})
     void authorizedUserWithoutRoleAdmin_GetUsers_ReturnForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
@@ -85,7 +86,7 @@ public class TddRestControllerUsersTest {
 
     @Test
     @DisplayName("Авторизованный пользователь с ролью ADMIN имеет доступ к /users")
-    @WithMockUser(roles = {"USER","ADMIN"})
+    @WithMockUser(roles = {"USER", "ADMIN"})
     void authorizedUserWithRoleAdmin_GetUsers_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())

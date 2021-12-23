@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDomain {
 
-    private String firstName="";
+    private String firstName = "";
     private String lastName = "";
     private String username = "";
     private List<Role> roles = new ArrayList<>();
