@@ -1,6 +1,8 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres;
 
 import static java.util.Arrays.asList;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.Role;
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
@@ -61,7 +63,7 @@ public class TddRestControllerUsersTest {
     void unauthorizedUser_GetAbout_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpectAll(MockMvcResultMatchers.status().isOk(),
+            .andExpectAll(status().isOk(),
                 MockMvcResultMatchers.content().string("About users!"));
 
     }
@@ -71,7 +73,7 @@ public class TddRestControllerUsersTest {
     void unauthorizedUser_GetUsers_ReturnUnauthorized() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -80,7 +82,7 @@ public class TddRestControllerUsersTest {
     void authorizedUserWithoutRoleAdmin_GetUsers_ReturnForbidden() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isForbidden());
+            .andExpect(status().isForbidden());
 
     }
 
@@ -90,7 +92,18 @@ public class TddRestControllerUsersTest {
     void authorizedUserWithRoleAdmin_GetUsers_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Авторизованный пользователь с ролью ADMIN получит список пользователей")
+    @WithMockUser(roles = {"USER", "ADMIN"})
+    void authorizedUserWithRoleAdmin_GetUsers_ReturnListUserDomain() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpectAll(
+                status().isOk(),
+                jsonPath("$[0].username").value("jim"));
     }
 
 }

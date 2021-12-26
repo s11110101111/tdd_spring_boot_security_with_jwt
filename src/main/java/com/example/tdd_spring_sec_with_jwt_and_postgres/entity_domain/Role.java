@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -15,6 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Role {
-
+    @NonNull
     private String role = "";
 }
