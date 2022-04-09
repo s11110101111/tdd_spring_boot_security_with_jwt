@@ -4,40 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * Entity user domain
+ * Класс пользователя
  */
 @Getter
+@Setter
 @EqualsAndHashCode
+@NoArgsConstructor
 public class UserDomain {
 
-    private final String name;
-    private final   String username;
-    private String password;
-    private final java.util.List<String> roles;
+    private String firstName = "";
+    private String lastName = "";
+    private String username = "";
+    private List<Role> roles = new ArrayList<>();
 
-    public UserDomain(String name, String username) {
-        this.username = username;
-        this.name= name;
-    this.roles = new ArrayList<>();
-    }
-
-    public UserDomain(String name, String username, List<String> roles) {
-        this.name = name;
+    public UserDomain(String firstName, String lastName, String username,
+        List<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.roles = roles;
     }
-
-    public UserDomain(UserDomain user) {
-        this.name= user.getName();
-        this.username= user.getUsername();
-        this.password = user.getPassword();
-        this.roles = user.getRoles();
-
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
+
