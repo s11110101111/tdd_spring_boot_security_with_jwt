@@ -14,18 +14,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-      show-sql: false
+    show-sql: false
     properties:
       hibernate.format_sql: true
-      # generated statistics
-      hibernate.generate_statistics: true
-      #catch slow queries
-      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 3
-      #/cashing
-      javax.persistence.sharedCache.mode: ENABLE_SELECTIVE
-logging:
-  level:
-    org:
-      hibernate:
-        stat: DEBUG
-        sql: DEBUG
+# подробный лог безопасности для обучения
+logging.level:
+  root: INFO
+  org.springframework.security: TRACE

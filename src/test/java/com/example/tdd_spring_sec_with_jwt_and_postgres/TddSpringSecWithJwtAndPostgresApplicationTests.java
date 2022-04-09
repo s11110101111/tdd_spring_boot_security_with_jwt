@@ -1,13 +1,17 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 import com.example.tdd_spring_sec_with_jwt_and_postgres.entity_domain.UserDomain;
+import com.example.tdd_spring_sec_with_jwt_and_postgres.services.UserDomainDaoService;
+import com.example.tdd_spring_sec_with_jwt_and_postgres.services.UserDomainService.UserDomainDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -22,49 +26,81 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DisplayName("MainRESTAppTest")
 class TddSpringSecWithJwtAndPostgresApplicationTests {
 
     @Autowired
     private WebApplicationContext context;
     private MockMvc mockMvc;
     private UserDomain expectedUser;
+    @Qualifier("userDomainDaoServiceImpl")
+    @Autowired
+    UserDomainDaoService userDomainDaoService;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
             .webAppContextSetup(context)
             .apply(SecurityMockMvcConfigurers.springSecurity())
             .build();
-        expectedUser = new UserDomain("Jim Carry","jim");
+        expectedUser = new UserDomain("Jim Carry", "jim", asList("USER", "ADMIN"));
 
     }
 
     @Test
-        //  @WithMockUser(username = "jim")
-    void contextLoads() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$").value("About users!"))
-            .andExpect(content().string("About users!"));
-
-    }
-
-    @Test
-    @WithMockUser(username = "jim", roles = {"USER", "ADMIN"})
-    void canLoadContextUsers() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+    void canGetAboutWithoutAuthentication() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].username")
-                .value(expectedUser.getUsername()));
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string("About users!"));
+
     }
 
     @Test
-    @DisplayName("Can't  get users without authentication user")
-    void canNotGetUsersWithoutAuthentication() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+    void cantGetUsersWithoutAuthentication() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "jim")
+    void cantGetUsersWithoutAuthorizationIfNotAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Can get users is has role admin")
+    @WithMockUser(username = "jim", roles = {"USER", "ADMIN"})
+    void canGetUsersIfHasRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
+
+    }
+
+    @Test
+    @DisplayName("Can get users is has role admin")
+    void canGetUsersIfUserJimHasRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+                .with(user(new UserDomainDetails(expectedUser))))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].username").value(expectedUser.getUsername()));
+
+    }
+
+      @Test
+    @DisplayName("can get error")
+    void canGetError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/error"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
 }
