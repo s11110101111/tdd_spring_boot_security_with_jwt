@@ -1,57 +1,80 @@
 package com.example.tdd_spring_sec_with_jwt_and_postgres;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import com.example.tdd_spring_sec_with_jwt_and_postgres.domain.UserDomain;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-/**
- * Интеграционный тест приложения
- */
-@Slf4j
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ExtendWith(SpringExtension.class)
-@DisplayName("Получение списка пользователей с аутентификацией ")
+@SpringBootTest
+@DisplayName("Ma in tdd test for users controller")
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class TddSpringSecWithJwtAndPostgresApplicationTests {
 
-    @LocalServerPort
-    public static int port;
-    private static final ObjectMapper om = new ObjectMapper();
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private WebApplicationContext context;
+    private MockMvc mockMvc;
 
-    @Test
-    @DisplayName("Прохождение аутентификации")
-    void canGetListUsersIntegrationTest() {
-        ResponseEntity<String> responseEntity = testRestTemplate
-            .withBasicAuth("user", "password")
-            .getForEntity("/api/users", String.class);
-        printJSON(responseEntity);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(APPLICATION_JSON);
-
-
+    @BeforeEach
+    private void setUp() {
+        mockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
     }
 
-    @SneakyThrows
-    private static void printJSON(Object obj) {
+    @Test
+    @DisplayName("can get end point about")
+    @WithMockUser(username = "admin", password = "123", roles = {"USER", "ADMIN"})
+    void contextLoadsRequestAboutTest() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("It about users"));
+    }
 
-        log.info("Локальный порт сервера - : {}", port);
-        System.out.println(om.writerWithDefaultPrettyPrinter().writeValueAsString(obj));
+    @Test
+    @DisplayName("can get end point about user unAuthorized")
+        //  @WithMockUser(username = "admin",password = "123",roles = {"USER","ADMIN"})
+    void contextLoadsRequestAboutUnAuthorizedTest() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/about"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$").value("It about users"));
+    }
 
+    @Test
+    @DisplayName("can get end point /users user Authorized")
+    @WithMockUser(username = "admin", password = "123", roles = {"USER", "ADMIN"})
+    void canGetUsersListAuthenticatedUserAdminTest() throws Exception {
+        UserDomain userDomain = new UserDomain("Jim Carry","jim","123");
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            //    .andExpect(content().string("Users List, for admin"));
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].username").value(userDomain.getUsername()));
+    }
+
+    @Test
+    @DisplayName("can not get /users UnAuthenticated user")
+    void canNotGetUsersListUnAuthenticatedUserThenReturn401Test() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized());
     }
 
 }
