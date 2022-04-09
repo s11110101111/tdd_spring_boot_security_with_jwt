@@ -1,0 +1,24 @@
+GET http://{{host}}:{{port}}{{context-path}}/api/about
+
+
+###
+
+
+GET http://{{host}}:{{port}}{{context-path}}/api/about
+
+> {%
+client.test("Request executed successfully", function (){
+    client.assert((response.status===200),"Response status is not 200");
+});
+%}
+
+###
+GET http://{{host}}:{{port}}{{context-path}}/api/users
+Accept: application/json
+
+> {%
+client.test("Request executed successfully", function (){
+    client.assert((response.status===401),"Response status is not 401 Unauthorized");
+});
+%}
+###
